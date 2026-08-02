@@ -30,6 +30,27 @@ worth re-checking if the icon is ever redrawn:
 The icon's own corner brackets are dropped (they are detected as the four
 components parked in the corners) because the page draws its own scan frame.
 
+## Encoding
+
+The two layers are **colour type 4 (grey + alpha)** with **filter type 0 on
+every row**, and both choices are load-bearing:
+
+- The art is pure white, so only coverage varies. Grey+alpha is 2 bytes per
+  pixel where RGBA needs 4.
+- Fully transparent pixels are left as `0,0` rather than `255,0`. Empty regions
+  then stay long runs of zeros, which is where the compression actually comes
+  from. Filling grey everywhere costs ~4KB.
+- **Filter 0, not adaptive.** The PNG spec's heuristic minimises delta
+  magnitude, which breaks those runs. Benchmarked on the body layer: filter 0 =
+  70,291 bytes, adaptive = 83,565, old RGBA+filter 0 = 79,539. Do not "improve"
+  this to adaptive filtering.
+
+# og-image.png
+
+1200x630 social card, rendered from an HTML template in headless Chrome at that
+exact window size. Referenced by absolute URL in `og:image` / `twitter:image` —
+relative paths do not work for social scrapers.
+
 # Favicons and touch icon
 
 These live at the repo root because browsers and iOS expect them there.

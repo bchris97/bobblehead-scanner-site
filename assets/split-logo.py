@@ -61,16 +61,28 @@ def read_png(path):
     return w, h, channels, out
 
 
-def write_rgba(path, w, h, px):
+def write_gray_alpha(path, w, h, ga):
+    """Colour type 4 (grey+alpha): the art is pure white, so only coverage
+    varies and half the bytes of RGBA are needed.
+
+    Filter type 0 (None) on every row, deliberately. This image is mostly empty,
+    and its compression comes from long runs of identical bytes; the spec's
+    adaptive heuristic picks Sub/Paeth to minimise delta magnitude, which breaks
+    those runs. Benchmarked on the body layer: None 70,291 bytes vs adaptive
+    83,565 vs the old RGBA+None 79,539. Do not "improve" this to adaptive.
+    """
+    stride = w * 2
     raw = bytearray()
     for y in range(h):
         raw.append(0)
-        raw += px[y * w * 4:(y + 1) * w * 4]
+        raw += ga[y * stride:(y + 1) * stride]
+
     def chunk(t, d):
         c = t + d
         return struct.pack(">I", len(d)) + c + struct.pack(">I", zlib.crc32(c) & 0xFFFFFFFF)
+
     png = (b"\x89PNG\r\n\x1a\n"
-           + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 6, 0, 0, 0))
+           + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 4, 0, 0, 0))
            + chunk(b"IDAT", zlib.compress(bytes(raw), 9))
            + chunk(b"IEND", b""))
     open(path, "wb").write(png)
@@ -122,8 +134,11 @@ for sy in range(h):
             for j in cells:
                 bracket[j] = 1
 
-head = bytearray(W * H * 4)
-body = bytearray(W * H * 4)
+# Grey/alpha pairs. Grey is 255 only where the art actually is; fully
+# transparent pixels are left as 0,0 so empty regions stay long runs of zeros,
+# which is what compresses. (Filling grey=255 everywhere costs ~4KB.)
+head = bytearray(W * H * 2)
+body = bytearray(W * H * 2)
 for y in range(H):
     sy = Y0 + y
     for x in range(W):
@@ -136,14 +151,14 @@ for y in range(H):
             continue
         is_head = sy <= HEAD_MAX_Y and HEAD_X0 <= sx <= HEAD_X1
         buf = head if is_head else body
-        d = (y * W + x) * 4
-        buf[d] = buf[d + 1] = buf[d + 2] = 255
-        buf[d + 3] = a
+        d = (y * W + x) * 2
+        buf[d] = 255
+        buf[d + 1] = a
 
-write_rgba(OUT + "/logo-head.png", W, H, head)
-write_rgba(OUT + "/logo-body.png", W, H, body)
+write_gray_alpha(OUT + "/logo-head.png", W, H, head)
+write_gray_alpha(OUT + "/logo-body.png", W, H, body)
 
 pivot = (509 - X0, 478 - Y0)   # base of the spring, in canvas coords
 print("canvas %dx%d  pivot=%s" % (W, H, pivot))
-print("head px:", sum(1 for i in range(W * H) if head[i * 4 + 3]))
-print("body px:", sum(1 for i in range(W * H) if body[i * 4 + 3]))
+print("head px:", sum(1 for i in range(W * H) if head[i * 2 + 1]))
+print("body px:", sum(1 for i in range(W * H) if body[i * 2 + 1]))

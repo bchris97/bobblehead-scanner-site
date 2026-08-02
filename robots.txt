@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bchris97.github.io/bobblehead-scanner-site/sitemap.xml
