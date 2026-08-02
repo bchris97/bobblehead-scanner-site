@@ -88,10 +88,22 @@ def write_gray_alpha(path, w, h, ga):
     open(path, "wb").write(png)
 
 
+import os
 from collections import deque
 
-SRC = "/Users/brett/Projects/bobblehead-scanner/bobblehead-app/assets/icon.png"
-OUT = "/Users/brett/Projects/bobblehead-scanner-site/assets"
+# Resolved relative to this file so the script carries no absolute local paths
+# (this repo is public). Override the source with BOBBLEHEAD_ICON if the app
+# repo lives somewhere other than a sibling directory.
+OUT = os.path.dirname(os.path.abspath(__file__))
+SRC = os.environ.get(
+    "BOBBLEHEAD_ICON",
+    os.path.normpath(os.path.join(
+        OUT, "..", "..", "bobblehead-scanner", "bobblehead-app", "assets", "icon.png")),
+)
+if not os.path.exists(SRC):
+    raise SystemExit(
+        "Source icon not found at %s\n"
+        "Set BOBBLEHEAD_ICON to the app's assets/icon.png." % SRC)
 
 BG_R, SPAN = 87, 168.0          # flat background red channel -> white
 HEAD_MAX_Y = 439                # spring coils begin at 440
