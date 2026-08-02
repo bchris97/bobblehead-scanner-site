@@ -214,30 +214,46 @@
   }
 
   /* Hero scan frame — the app icon's bracket motif, animated */
-  .scanner { width: min(280px, 78vw); margin: 0 auto 30px; position: relative; }
-  .scanner svg { display: block; width: 100%; height: auto; }
-  .scan-sweep { animation: sweep 3.4s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
-  @keyframes sweep {
-    0%, 100% { transform: translateY(-58px); opacity: 0.25; }
-    50%      { transform: translateY(58px);  opacity: 1; }
-  }
-  .bracket { animation: pulse-bracket 3.4s ease-in-out infinite; }
+  .scanner { width: min(300px, 80vw); margin: 0 auto 30px; position: relative; }
+  .scanner .frame { display: block; width: 100%; height: auto; }
+  .bracket { animation: pulse-bracket 4s ease-in-out infinite; }
   @keyframes pulse-bracket {
     0%, 100% { opacity: 0.55; }
     50%      { opacity: 1; }
   }
-  /* The head rocks on the neck, because of course it does. */
-  .bobble {
-    transform-box: view-box;
-    transform-origin: 140px 155px;
-    animation: bobble 3.4s ease-in-out infinite;
+
+  /* Viewfinder interior, matching the frame rect in the SVG below it. */
+  .stage {
+    position: absolute; overflow: hidden;
+    left: 16.43%; top: 16.43%; width: 67.14%; height: 67.14%;
+    border-radius: 5.7%;
   }
-  @keyframes bobble {
-    0%, 100% { transform: rotate(-4.5deg); }
-    50%      { transform: rotate(4.5deg); }
+  /* Both logo layers share one box so the head sits exactly where the
+     body expects it; only the head rotates. */
+  .logo-body, .logo-head {
+    position: absolute; left: 17.2%; top: 2%;
+    width: 65.6%; height: 96%;
+  }
+  /* Pivot is the base of the spring, measured off the source artwork. */
+  .logo-head {
+    transform-origin: 49.3% 49.1%;
+    animation: bob 4s ease-in-out infinite;
+  }
+  @keyframes bob {
+    0%, 100% { transform: rotate(-5deg); }
+    50%      { transform: rotate(5deg); }
+  }
+  .sweep {
+    position: absolute; left: 0; width: 100%; top: 50%; height: 3px;
+    background: linear-gradient(90deg, rgba(108, 172, 228, 0), #93C4EE, rgba(108, 172, 228, 0));
+    animation: sweep 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+  @keyframes sweep {
+    0%, 100% { transform: translateY(-4200%); opacity: 0.25; }
+    50%      { transform: translateY(4200%);  opacity: 1; }
   }
   .price-pop {
-    position: absolute; right: -12px; bottom: 6px;
+    position: absolute; right: -16px; top: 56%;
     background: var(--bg-card); border: 1px solid var(--border-strong);
     border-radius: 999px; padding: 7px 15px;
     font-size: 17px; font-weight: 800; color: var(--accent);
@@ -476,14 +492,8 @@
     <p class="lede">Point your camera at any bobblehead. Get an instant ID with player, team, year and edition, plus what sellers are asking for it right now.</p>
 
     <div class="scanner" role="img" aria-label="A bobblehead being scanned inside a camera frame, resolving to a price">
-      <svg viewBox="0 0 280 280" fill="none" aria-hidden="true">
+      <svg class="frame" viewBox="0 0 280 280" fill="none" aria-hidden="true">
         <defs>
-          <clipPath id="frameClip"><rect x="46" y="46" width="188" height="188" rx="16"/></clipPath>
-          <linearGradient id="sweepGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#6CACE4" stop-opacity="0"/>
-            <stop offset="0.5" stop-color="#93C4EE"/>
-            <stop offset="1" stop-color="#6CACE4" stop-opacity="0"/>
-          </linearGradient>
           <radialGradient id="glowGrad" cx="0.5" cy="0.5" r="0.5">
             <stop offset="0" stop-color="#6CACE4" stop-opacity="0.18"/>
             <stop offset="1" stop-color="#6CACE4" stop-opacity="0"/>
@@ -493,31 +503,6 @@
         <circle cx="140" cy="140" r="118" fill="url(#glowGrad)"/>
         <rect x="46" y="46" width="188" height="188" rx="16" fill="#14181E" stroke="#20262F" stroke-width="1.5"/>
 
-        <g clip-path="url(#frameClip)">
-          <!-- bobblehead figure: oversized head is the whole point, tiny body below -->
-          <g stroke="#6CACE4" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <!-- base -->
-            <path d="M106 204v6c0 5 15 8 34 8s34-3 34-8v-6" fill="#1A1F26"/>
-            <ellipse cx="140" cy="204" rx="34" ry="8" fill="#1A1F26"/>
-            <!-- body + arms -->
-            <path d="M122 204l4-38q14-6 28 0l4 38z" fill="#1A1F26"/>
-            <path d="M127 174l-12 14M153 174l12 14"/>
-            <!-- neck -->
-            <path d="M140 152v10"/>
-            <!-- head, rocking on the neck -->
-            <g class="bobble">
-              <circle cx="140" cy="108" r="44" fill="#151A21"/>
-              <path d="M97 100a44 44 0 0 1 86 0z" fill="#243040"/>
-              <path d="M177 100c16-3 28 1 27 8-2 6-16 5-29 2"/>
-              <path d="M126 120h.1M154 120h.1" stroke-width="6.5"/>
-              <path d="M128 134q12 10 24 0"/>
-            </g>
-          </g>
-          <g class="scan-sweep">
-            <rect x="46" y="138" width="188" height="3.5" fill="url(#sweepGrad)"/>
-          </g>
-        </g>
-
         <!-- corner brackets: the app icon's motif -->
         <g class="bracket" stroke="#93C4EE" stroke-width="6" stroke-linecap="round" fill="none">
           <path d="M40 76V46a6 6 0 0 1 6-6h30"/>
@@ -526,6 +511,15 @@
           <path d="M76 240H46a6 6 0 0 1-6-6v-30"/>
         </g>
       </svg>
+
+      <!-- The app logo itself, split at the spring so the head can bob.
+           Layers are generated from assets/icon.png; see assets/README.md. -->
+      <div class="stage">
+        <img class="logo-body" src="assets/logo-body.png" alt="" width="475" height="696">
+        <img class="logo-head" src="assets/logo-head.png" alt="" width="475" height="696">
+        <span class="sweep"></span>
+      </div>
+
       <span class="price-pop" aria-hidden="true">$76.97</span>
     </div>
 
