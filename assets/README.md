@@ -29,3 +29,32 @@ worth re-checking if the icon is ever redrawn:
 
 The icon's own corner brackets are dropped (they are detected as the four
 components parked in the corners) because the page draws its own scan frame.
+
+# Favicons and touch icon
+
+These live at the repo root because browsers and iOS expect them there.
+
+| File | Source | Used at |
+|------|--------|---------|
+| `favicon.svg` | the nav glyph | any size, modern browsers |
+| `favicon-32.png` | `favicon.svg` | 32px tab, retina |
+| `favicon-16.png` | `favicon-16.svg` | 16px tab |
+| `favicon.ico` | the two PNGs above | bare `/favicon.ico` probes |
+| `apple-touch-icon.png` | the app icon, unmodified | 180px iOS home screen |
+
+**The app logo is deliberately not used for the favicon.** Measured against the
+source art, the median interior detail (jersey seams, glove laces, ball
+stitches) is 14px on a 696px-tall figure, so it goes sub-pixel below roughly
+50px of display height. A favicon renders at 16-32px, well under that, and the
+detail turns to grey mush. The touch icon is 180px, which is comfortably above
+the threshold, so that one *is* the real logo.
+
+`favicon-16.svg` is a separate drawing rather than a scaled copy: at 16px the
+nav glyph's outlined head and 1.5px strokes blur out, so the small version uses
+integer-aligned 2px strokes and a solid head. Mass beats detail at that size.
+
+To re-rasterise after changing either SVG, render it in headless Chrome at the
+target size with a transparent canvas:
+
+    chrome --headless --default-background-color=00000000 \
+           --window-size=32,32 --screenshot=favicon-32.png page-wrapping-the-svg.html
