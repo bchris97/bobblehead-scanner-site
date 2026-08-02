@@ -1,21 +1,834 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bobblehead Scanner</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What's My Bobblehead Worth? Scan &amp; Value Any Bobblehead | iOS</title>
+<meta name="description" content="Bobblehead Scanner identifies any bobblehead from one photo and shows what sellers are asking for it right now on eBay. Stadium giveaways, vintage nodders, limited editions. First 5 scans free on iOS.">
+<link rel="canonical" href="https://bchris97.github.io/bobblehead-scanner-site/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="What's My Bobblehead Worth? Find out in one photo.">
+<meta property="og:description" content="Snap a photo. Identify the bobblehead. See current asking prices from live eBay listings, and track what your whole shelf is worth.">
+<meta property="og:url" content="https://bchris97.github.io/bobblehead-scanner-site/">
+<meta property="og:site_name" content="Bobblehead Scanner">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bobblehead Scanner: Identify &amp; Value Bobbleheads on iOS">
+<meta name="twitter:description" content="Identify any bobblehead from a photo and see current eBay asking prices. First 5 scans free.">
+<meta name="twitter:url" content="https://bchris97.github.io/bobblehead-scanner-site/">
+<meta name="theme-color" content="#0B0D11">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Bobblehead Scanner: Value",
+  "operatingSystem": "iOS",
+  "applicationCategory": "UtilitiesApplication",
+  "description": "Bobblehead Scanner identifies bobbleheads from a single photo and shows their market value based on current asking prices from live eBay listings. Catalog a collection and track its total value.",
+  "url": "https://bchris97.github.io/bobblehead-scanner-site/",
+  "installUrl": "https://apps.apple.com/app/apple-store/id6777501965",
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Free",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "First 5 bobblehead scans free, no account required"
+    },
+    {
+      "@type": "Offer",
+      "name": "Bobblehead Scanner Pro Yearly",
+      "price": "39.99",
+      "priceCurrency": "USD",
+      "description": "Unlimited scans, cloud backup, unlimited collection storage, collection value tracking"
+    },
+    {
+      "@type": "Offer",
+      "name": "Bobblehead Scanner Pro Monthly",
+      "price": "4.99",
+      "priceCurrency": "USD",
+      "description": "Unlimited scans, cloud backup, unlimited collection storage, collection value tracking"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I find out what my bobblehead is worth?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Take a photo of it with Bobblehead Scanner. The app identifies the player, team, year and edition, then searches live eBay listings for that exact item and shows you the range sellers are currently asking."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where do the values come from?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Values come from current eBay listings, which means they reflect asking prices rather than completed sales. They are a live read on what sellers want for the item today, not an appraisal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are stadium giveaway (SGA) bobbleheads worth anything?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most are not, because teams typically hand out 15,000 to 40,000 of them in a single night. The exceptions are the ones that matter: early giveaways, Hall of Fame players, short-run promotions, and anything still sealed in the original box. Bobblehead Scanner flags a scan as a stadium giveaway so you know which category you are in."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Bobblehead Scanner free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your first 5 scans are free, with no account and no sign-up. Bobblehead Scanner Pro unlocks unlimited scans, unlimited collection storage, collection value tracking, and automatic cloud backup for $4.99 per month or $39.99 per year."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work on vintage bobbleheads and nodders?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Vintage papier-mache nodders, modern stadium giveaways, mascots and limited editions all scan the same way. Older and rarer pieces are harder to identify confidently, so photograph the base and any nameplate text clearly for the best result."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my collection private?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is no account and no sign-up. Your collection and its photos live on your device. Scan photos are sent over an encrypted connection only to identify the item and are never stored on our servers. Pro subscribers get an encrypted cloud backup of their collection details, which never includes photos."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+  /* Palette lifted from the app: bobblehead-app/src/components/theme.js */
+  :root {
+    --bg: #0B0D11;
+    --bg-card: #14181E;
+    --bg-subtle: #1A1F26;
+    --bg-tab: #0E1116;
+    --accent: #6CACE4;
+    --accent-light: #93C4EE;
+    --accent-deep: #4A8CC9;
+    --accent-muted: rgba(108, 172, 228, 0.14);
+    --ink: #F5F7FA;
+    --ink-2: #9BA3AF;
+    --ink-mute: #5E6673;
+    --ink-inverse: #081019;
+    --border: #20262F;
+    --border-strong: #2E3540;
+    --success: #4ADE80;
+    --warning: #FBBF24;
+    --error: #F87171;
+    --grad-accent: linear-gradient(135deg, #8FC2EE 0%, #5D9FD9 100%);
+    --grad-hero: linear-gradient(160deg, #1A2129 0%, #10151B 100%);
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a:focus-visible, button:focus-visible, select:focus-visible, summary:focus-visible {
+    outline: 3px solid var(--accent-light);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 22px; }
+
+  /* ── Section eyebrow: mirrors the app's uppercase tracked labels ── */
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: inline-block;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: sticky; top: 0; z-index: 60;
+    background: rgba(11, 13, 17, 0.86);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px; padding: 12px 22px; max-width: 980px; margin: 0 auto;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--ink); text-decoration: none;
+    font-size: 14px; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase;
+    line-height: 1.15;
+  }
+  .brand svg { flex: none; }
+  .nav-cta {
+    background: var(--grad-accent); color: var(--ink-inverse); text-decoration: none;
+    font-size: 13px; font-weight: 800; letter-spacing: 0.02em;
+    padding: 10px 18px; border-radius: 999px; white-space: nowrap;
+    transition: filter 0.15s ease, transform 0.15s ease;
+  }
+  .nav-cta:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  @media (max-width: 420px) { .brand { font-size: 12px; } }
+
+  /* ── Hero ── */
+  header.hero { position: relative; padding: 68px 0 60px; text-align: center; overflow: hidden; }
+  header.hero::before {
+    content: ""; position: absolute; top: -220px; left: 50%; transform: translateX(-50%);
+    width: 720px; height: 520px; pointer-events: none;
+    background: radial-gradient(ellipse at center, rgba(108, 172, 228, 0.16) 0%, rgba(108, 172, 228, 0) 68%);
+  }
+  header.hero > .wrap { position: relative; }
+  .hero h1 {
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 800; letter-spacing: -0.035em; line-height: 1.08;
+    max-width: 740px; margin: 18px auto 18px;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero .lede {
+    color: var(--ink-2); font-size: clamp(16px, 2.2vw, 19px);
+    max-width: 600px; margin: 0 auto 30px;
+  }
+
+  /* Hero scan frame — the app icon's bracket motif, animated */
+  .scanner { width: min(280px, 78vw); margin: 0 auto 30px; position: relative; }
+  .scanner svg { display: block; width: 100%; height: auto; }
+  .scan-sweep { animation: sweep 3.4s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+  @keyframes sweep {
+    0%, 100% { transform: translateY(-58px); opacity: 0.25; }
+    50%      { transform: translateY(58px);  opacity: 1; }
+  }
+  .bracket { animation: pulse-bracket 3.4s ease-in-out infinite; }
+  @keyframes pulse-bracket {
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 1; }
+  }
+  /* The head rocks on the neck, because of course it does. */
+  .bobble {
+    transform-box: view-box;
+    transform-origin: 140px 155px;
+    animation: bobble 3.4s ease-in-out infinite;
+  }
+  @keyframes bobble {
+    0%, 100% { transform: rotate(-4.5deg); }
+    50%      { transform: rotate(4.5deg); }
+  }
+  .price-pop {
+    position: absolute; right: -12px; bottom: 6px;
+    background: var(--bg-card); border: 1px solid var(--border-strong);
+    border-radius: 999px; padding: 7px 15px;
+    font-size: 17px; font-weight: 800; color: var(--accent);
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.55);
+    animation: pop 3.4s ease-in-out infinite;
+  }
+  @keyframes pop {
+    0%, 42%   { opacity: 0; transform: scale(0.86) translateY(6px); }
+    58%, 92%  { opacity: 1; transform: scale(1) translateY(0); }
+    100%      { opacity: 0; transform: scale(0.96) translateY(0); }
+  }
+
+  .cta-row { display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--grad-accent); color: var(--ink-inverse); text-decoration: none;
+    font-weight: 800; font-size: 16px; padding: 15px 30px; border-radius: 999px;
+    box-shadow: 0 6px 26px rgba(108, 172, 228, 0.3);
+    transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-primary:hover {
+    filter: brightness(1.07); transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(108, 172, 228, 0.4);
+  }
+  .free-note {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.13em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 34px; }
+  .chip {
+    font-size: 12.5px; color: var(--ink-2);
+    border: 1px solid var(--border); background: var(--bg-card);
+    padding: 7px 14px; border-radius: 999px;
+  }
+
+  /* ── Sections ── */
+  section { padding: 62px 0; border-top: 1px solid var(--border); }
+  .sec-head { text-align: center; margin-bottom: 40px; }
+  .sec-head h2 {
+    font-size: clamp(25px, 3.8vw, 35px); font-weight: 800;
+    letter-spacing: -0.028em; margin-top: 12px;
+  }
+  .sec-head p { color: var(--ink-2); max-width: 580px; margin: 12px auto 0; }
+
+  /* Steps */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .step {
+    background: var(--grad-hero); border: 1px solid var(--border);
+    border-radius: 20px; padding: 28px 24px;
+  }
+  .step .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 999px;
+    background: var(--accent-muted); color: var(--accent);
+    font-size: 13px; font-weight: 800; margin-bottom: 14px;
+  }
+  .step h3 { font-size: 18px; letter-spacing: -0.01em; margin-bottom: 8px; }
+  .step p { color: var(--ink-2); font-size: 14.5px; }
+  @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+
+  /* Facts */
+  .facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; max-width: 780px; margin: 0 auto; }
+  .fact {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 24px;
+  }
+  .fact .ico {
+    width: 38px; height: 38px; border-radius: 12px;
+    background: var(--accent-muted); display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .fact h3 { font-size: 16.5px; margin-bottom: 7px; letter-spacing: -0.01em; }
+  .fact p { color: var(--ink-2); font-size: 14.5px; }
+  @media (max-width: 660px) { .facts { grid-template-columns: 1fr; } }
+
+  /* ── Scorecard tool ── */
+  .card-tool {
+    max-width: 580px; margin: 0 auto;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 28px; padding: 30px;
+  }
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+  }
+  .field select {
+    width: 100%; background: var(--bg-subtle); border: 1px solid var(--border-strong);
+    color: var(--ink); font-size: 15.5px; font-family: var(--font);
+    padding: 13px 14px; border-radius: 14px; appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236CACE4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 15px center;
+    padding-right: 40px; cursor: pointer;
+  }
+  .card-tool button[type="submit"] {
+    width: 100%; background: var(--grad-accent); color: var(--ink-inverse);
+    border: none; font-family: var(--font); font-weight: 800; font-size: 16px;
+    padding: 15px; border-radius: 999px; cursor: pointer; margin-top: 6px;
+    box-shadow: 0 6px 22px rgba(108, 172, 228, 0.26);
+    transition: filter 0.15s ease;
+  }
+  .card-tool button[type="submit"]:hover { filter: brightness(1.07); }
+
+  /* Result card — deliberately mirrors the app's "collection value" card */
+  .result { margin-top: 24px; }
+  .result-card {
+    background: var(--grad-hero); border: 1px solid var(--border-strong);
+    border-radius: 20px; padding: 26px 22px; text-align: center;
+    animation: rise 0.34s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .result-card .r-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--ink-2);
+  }
+  .result-card .r-tier {
+    font-size: clamp(26px, 5vw, 34px); font-weight: 800;
+    letter-spacing: -0.03em; margin: 8px 0 4px;
+  }
+  .r-tier.high { color: var(--success); }
+  .r-tier.mid  { color: var(--accent); }
+  .r-tier.low  { color: var(--warning); }
+  .meter {
+    height: 8px; border-radius: 999px; background: var(--bg);
+    overflow: hidden; margin: 18px 0 14px; border: 1px solid var(--border);
+  }
+  .meter span {
+    display: block; height: 100%; border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  .meter span.high { background: linear-gradient(90deg, #34B96A, var(--success)); }
+  .meter span.mid  { background: var(--grad-accent); }
+  .meter span.low  { background: linear-gradient(90deg, #C98A14, var(--warning)); }
+  .result-card .r-detail { color: var(--ink-2); font-size: 14.5px; text-align: left; }
+  .result-card .r-detail strong { color: var(--ink); font-weight: 700; }
+  .tool-cta { text-align: center; margin-top: 20px; }
+  .tool-cta a {
+    color: var(--accent); font-weight: 700; text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .tool-cta a:hover { color: var(--accent-light); }
+  .tool-note { font-size: 12.5px; color: var(--ink-mute); text-align: center; margin-top: 14px; }
+
+  /* ── Pricing ── */
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; max-width: 860px; margin: 0 auto; align-items: start; }
+  .plan {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 22px; padding: 28px 22px; text-align: center; position: relative;
+  }
+  .plan.best {
+    border-color: var(--accent-deep);
+    background: var(--grad-hero);
+    box-shadow: 0 0 0 1px rgba(108, 172, 228, 0.18), 0 14px 40px rgba(0, 0, 0, 0.45);
+  }
+  .plan .badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--grad-accent); color: var(--ink-inverse);
+    font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 999px; white-space: nowrap;
+  }
+  .plan h3 {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-2);
+  }
+  .plan .price { font-size: 34px; font-weight: 800; color: var(--accent); margin: 12px 0 2px; letter-spacing: -0.03em; }
+  .plan .per { color: var(--ink-mute); font-size: 13px; }
+  .plan ul { list-style: none; margin-top: 18px; text-align: left; }
+  .plan li {
+    color: var(--ink-2); font-size: 14px; padding: 6px 0 6px 24px; position: relative;
+  }
+  .plan li::before {
+    content: ""; position: absolute; left: 2px; top: 12px;
+    width: 11px; height: 6px; border-left: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent); transform: rotate(-45deg);
+  }
+  @media (max-width: 760px) { .plans { grid-template-columns: 1fr; } }
+  .pricing-legal { text-align: center; color: var(--ink-mute); font-size: 12.5px; margin-top: 24px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+  /* ── FAQ ── */
+  .faq { max-width: 740px; margin: 0 auto; }
+  .faq details {
+    border: 1px solid var(--border); background: var(--bg-card);
+    border-radius: 16px; margin-bottom: 12px;
+  }
+  .faq details[open] { border-color: var(--border-strong); }
+  .faq summary {
+    cursor: pointer; padding: 18px 52px 18px 20px; font-weight: 700; font-size: 15.5px;
+    list-style: none; position: relative;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after {
+    content: ""; position: absolute; right: 22px; top: 24px;
+    width: 9px; height: 9px;
+    border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent);
+    transform: rotate(45deg); transition: transform 0.2s ease;
+  }
+  .faq details[open] summary::after { transform: rotate(-135deg); top: 27px; }
+  .faq .a { padding: 0 20px 18px; color: var(--ink-2); font-size: 14.5px; }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border); background: var(--bg-tab);
+    padding: 48px 0 56px; text-align: center;
+  }
+  footer .cta-row { margin-bottom: 28px; }
+  .foot-links { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+  .foot-links a { color: var(--ink-2); font-size: 13.5px; text-decoration: none; }
+  .foot-links a:hover { color: var(--accent); text-decoration: underline; }
+  .copyright { font-size: 12px; color: var(--ink-mute); letter-spacing: 0.06em; }
+</style>
 </head>
 <body>
-<main>
-  <h1>Bobblehead Scanner</h1>
-  <p class="meta">Identify and price bobbleheads with a photo.</p>
-  <p>Snap a photo of any bobblehead to identify it and see its market value based on live eBay listings. Track your whole collection's worth in one place.</p>
-  <ul>
-    <li><a href="support.html">Support</a></li>
-    <li><a href="privacy.html">Privacy Policy</a></li>
-  </ul>
-  <footer>© 2026 Bobblehead Scanner · <a href="mailto:support.bobbleheadscanner.easily541@aleeas.com">support.bobbleheadscanner.easily541@aleeas.com</a></footer>
-</main>
+
+<nav aria-label="Main">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="Bobblehead Scanner home">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <path d="M2 8V4a2 2 0 0 1 2-2h4M18 2h4a2 2 0 0 1 2 2v4M24 18v4a2 2 0 0 1-2 2h-4M8 24H4a2 2 0 0 1-2-2v-4"
+              stroke="#6CACE4" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="13" cy="10" r="4" stroke="#6CACE4" stroke-width="2"/>
+        <path d="M9 19c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#6CACE4" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Bobblehead<br>Scanner
+    </a>
+    <a class="nav-cta" href="https://apps.apple.com/app/apple-store/id6777501965?ct=web_nav&amp;mt=8">Get the app</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="eyebrow">iOS App</span>
+    <h1>Know what your<br><em>bobblehead is worth.</em></h1>
+    <p class="lede">Point your camera at any bobblehead. Get an instant ID with player, team, year and edition, plus what sellers are asking for it right now.</p>
+
+    <div class="scanner" role="img" aria-label="A bobblehead being scanned inside a camera frame, resolving to a price">
+      <svg viewBox="0 0 280 280" fill="none" aria-hidden="true">
+        <defs>
+          <clipPath id="frameClip"><rect x="46" y="46" width="188" height="188" rx="16"/></clipPath>
+          <linearGradient id="sweepGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#6CACE4" stop-opacity="0"/>
+            <stop offset="0.5" stop-color="#93C4EE"/>
+            <stop offset="1" stop-color="#6CACE4" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="glowGrad" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#6CACE4" stop-opacity="0.18"/>
+            <stop offset="1" stop-color="#6CACE4" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <circle cx="140" cy="140" r="118" fill="url(#glowGrad)"/>
+        <rect x="46" y="46" width="188" height="188" rx="16" fill="#14181E" stroke="#20262F" stroke-width="1.5"/>
+
+        <g clip-path="url(#frameClip)">
+          <!-- bobblehead figure: oversized head is the whole point, tiny body below -->
+          <g stroke="#6CACE4" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <!-- base -->
+            <path d="M106 204v6c0 5 15 8 34 8s34-3 34-8v-6" fill="#1A1F26"/>
+            <ellipse cx="140" cy="204" rx="34" ry="8" fill="#1A1F26"/>
+            <!-- body + arms -->
+            <path d="M122 204l4-38q14-6 28 0l4 38z" fill="#1A1F26"/>
+            <path d="M127 174l-12 14M153 174l12 14"/>
+            <!-- neck -->
+            <path d="M140 152v10"/>
+            <!-- head, rocking on the neck -->
+            <g class="bobble">
+              <circle cx="140" cy="108" r="44" fill="#151A21"/>
+              <path d="M97 100a44 44 0 0 1 86 0z" fill="#243040"/>
+              <path d="M177 100c16-3 28 1 27 8-2 6-16 5-29 2"/>
+              <path d="M126 120h.1M154 120h.1" stroke-width="6.5"/>
+              <path d="M128 134q12 10 24 0"/>
+            </g>
+          </g>
+          <g class="scan-sweep">
+            <rect x="46" y="138" width="188" height="3.5" fill="url(#sweepGrad)"/>
+          </g>
+        </g>
+
+        <!-- corner brackets: the app icon's motif -->
+        <g class="bracket" stroke="#93C4EE" stroke-width="6" stroke-linecap="round" fill="none">
+          <path d="M40 76V46a6 6 0 0 1 6-6h30"/>
+          <path d="M204 40h30a6 6 0 0 1 6 6v30"/>
+          <path d="M240 204v30a6 6 0 0 1-6 6h-30"/>
+          <path d="M76 240H46a6 6 0 0 1-6-6v-30"/>
+        </g>
+      </svg>
+      <span class="price-pop" aria-hidden="true">$76.97</span>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn-primary" href="https://apps.apple.com/app/apple-store/id6777501965?ct=web_hero&amp;mt=8">Download on the App Store</a>
+      <span class="free-note">First 5 scans free · No account</span>
+    </div>
+
+    <div class="chips" aria-label="What it identifies">
+      <span class="chip">⚾ Stadium giveaways</span>
+      <span class="chip">Vintage nodders</span>
+      <span class="chip">Limited editions</span>
+      <span class="chip">Mascots</span>
+      <span class="chip">Hall of Famers</span>
+    </div>
+  </div>
+</header>
+
+<section id="how" aria-labelledby="how-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">How it works</span>
+      <h2 id="how-h">One photo, three seconds</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="num">1</span>
+        <h3>Snap the shelf</h3>
+        <p>Fill the frame with the bobblehead and tap the shutter. Keep the base and any nameplate text visible; that is where the identifying details usually are.</p>
+      </div>
+      <div class="step">
+        <span class="num">2</span>
+        <h3>Get the ID and the number</h3>
+        <p>The app names the player, team, year and edition, flags stadium giveaways and limited runs, then pulls current eBay listings for that exact item.</p>
+      </div>
+      <div class="step">
+        <span class="num">3</span>
+        <h3>Catalog the collection</h3>
+        <p>Save it with its value and a photo thumbnail, then watch your shelf's total add up. Pro backs the whole collection up to the cloud automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="facts" aria-labelledby="facts-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Straight answers</span>
+      <h2 id="facts-h">Real listings, not a stale price guide</h2>
+      <p>Values are <strong>current asking prices</strong> pulled from live eBay listings, which means what sellers want for the item today.</p>
+    </div>
+    <div class="facts">
+      <div class="fact">
+        <div class="ico" aria-hidden="true">
+          <svg width="19" height="19" viewBox="0 0 20 20" fill="none">
+            <path d="M2.6 9.3V3.6a1 1 0 0 1 1-1h5.7a1 1 0 0 1 .7.3l7.1 7.1a1 1 0 0 1 0 1.4l-5.7 5.7a1 1 0 0 1-1.4 0L2.9 10a1 1 0 0 1-.3-.7z"
+                  stroke="#6CACE4" stroke-width="1.8" stroke-linejoin="round"/>
+            <circle cx="6.6" cy="6.6" r="1.5" fill="#6CACE4"/>
+          </svg>
+        </div>
+        <h3>Live eBay pricing</h3>
+        <p>Every scan runs a fresh search against current listings for that specific bobblehead, so the number moves with the market instead of sitting in a book from 2019.</p>
+      </div>
+      <div class="fact">
+        <div class="ico" aria-hidden="true">
+          <svg width="19" height="19" viewBox="0 0 20 20" fill="none">
+            <path d="M10 1.8l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.6-4.8 2.6.9-5.4L2.2 7.5l5.4-.8z"
+                  stroke="#6CACE4" stroke-width="1.8" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Giveaways and rarities flagged</h3>
+        <p>Scan results call out stadium giveaways (SGAs) and limited editions, so you can tell a 30,000-run promo night from something genuinely scarce.</p>
+      </div>
+      <div class="fact">
+        <div class="ico" aria-hidden="true">
+          <svg width="19" height="19" viewBox="0 0 20 20" fill="none">
+            <path d="M5.5 14.5V9M10 14.5V4M14.5 14.5v-3.5" stroke="#6CACE4" stroke-width="2" stroke-linecap="round"/>
+            <path d="M2.5 17.5h15" stroke="#6CACE4" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Collection value tracking</h3>
+        <p>Every saved bobblehead rolls into one running total, with photo thumbnails so your collection screen looks as good as the shelf it came from.</p>
+      </div>
+      <div class="fact">
+        <div class="ico" aria-hidden="true">
+          <svg width="19" height="19" viewBox="0 0 20 20" fill="none">
+            <rect x="3.5" y="8.5" width="13" height="9" rx="2.5" stroke="#6CACE4" stroke-width="1.8"/>
+            <path d="M6.5 8.5V6a3.5 3.5 0 0 1 7 0v2.5" stroke="#6CACE4" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>No account, nothing stored</h3>
+        <p>No sign-up, no email. Your collection lives on your device and scan photos are never stored on our servers. Pro adds an encrypted backup of the details, never the photos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tool" aria-labelledby="tool-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Free tool</span>
+      <h2 id="tool-h">Is your bobblehead worth checking?</h2>
+      <p>Five questions that drive almost all of a bobblehead's value. Answer them for a rough read before you scan.</p>
+    </div>
+
+    <form class="card-tool" id="scoreForm" novalidate>
+      <div class="field">
+        <label for="era">When was it made?</label>
+        <select id="era">
+          <option value="35">Before 1975, the vintage nodder era</option>
+          <option value="16">1975 to 1999</option>
+          <option value="5" selected>2000 or newer</option>
+          <option value="10">Not sure</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="box">Do you have the original box?</label>
+        <select id="box">
+          <option value="20">Yes, box included</option>
+          <option value="0" selected>No box</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="condition">What condition is it in?</label>
+        <select id="condition">
+          <option value="20" selected>Mint, no visible flaws</option>
+          <option value="10">Minor paint wear or scuffs</option>
+          <option value="0">Chips, cracks, or a repair</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="who">Who or what is it?</label>
+        <select id="who">
+          <option value="20">Hall of Famer or superstar</option>
+          <option value="9" selected>Everyday or role player</option>
+          <option value="3">Mascot, generic, or unidentified</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="rarity">Limited edition or serial numbered?</label>
+        <select id="rarity">
+          <option value="15">Yes, numbered or a short run</option>
+          <option value="0" selected>No, or not sure</option>
+        </select>
+      </div>
+
+      <button type="submit">Score my bobblehead</button>
+
+      <div class="result" id="result" aria-live="polite"></div>
+
+      <div class="tool-cta">
+        <a href="https://apps.apple.com/app/apple-store/id6777501965?ct=web_tool&amp;mt=8">Want the actual number? Scan it free →</a>
+      </div>
+      <p class="tool-note">A rule-of-thumb score, not an appraisal. Only a search of real listings for your exact item tells you what it is worth.</p>
+    </form>
+  </div>
+</section>
+
+<section id="pricing" aria-labelledby="price-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Pricing</span>
+      <h2 id="price-h">Try it before you pay</h2>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <h3>Free</h3>
+        <div class="price">$0</div>
+        <div class="per">first 5 scans</div>
+        <ul>
+          <li>5 scans to try it out</li>
+          <li>Full identification and pricing</li>
+          <li>No account or sign-up</li>
+        </ul>
+      </div>
+      <div class="plan best">
+        <span class="badge">Best value · Save 33%</span>
+        <h3>Pro Yearly</h3>
+        <div class="price">$39.99</div>
+        <div class="per">per year</div>
+        <ul>
+          <li>Unlimited scans</li>
+          <li>Automatic cloud backup</li>
+          <li>Unlimited collection storage</li>
+          <li>Collection value tracking</li>
+        </ul>
+      </div>
+      <div class="plan">
+        <h3>Pro Monthly</h3>
+        <div class="price">$4.99</div>
+        <div class="per">per month</div>
+        <ul>
+          <li>Unlimited scans</li>
+          <li>Automatic cloud backup</li>
+          <li>Unlimited collection storage</li>
+          <li>Collection value tracking</li>
+        </ul>
+      </div>
+    </div>
+    <p class="pricing-legal">Subscriptions auto-renew unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in your Apple ID settings.</p>
+  </div>
+</section>
+
+<section id="faq-sec" aria-labelledby="faq-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Q &amp; A</span>
+      <h2 id="faq-h">Frequently asked questions</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>How do I find out what my bobblehead is worth?</summary>
+        <p class="a">Take a photo of it with Bobblehead Scanner. The app identifies the player, team, year and edition, then searches live eBay listings for that exact item and shows you the range sellers are currently asking.</p>
+      </details>
+      <details>
+        <summary>Where do the values come from?</summary>
+        <p class="a">Values come from current eBay listings, which means they reflect asking prices rather than completed sales. They are a live read on what sellers want for the item today, not an appraisal.</p>
+      </details>
+      <details>
+        <summary>Are stadium giveaway (SGA) bobbleheads worth anything?</summary>
+        <p class="a">Most are not, because teams typically hand out 15,000 to 40,000 of them in a single night. The exceptions are the ones that matter: early giveaways, Hall of Fame players, short-run promotions, and anything still sealed in the original box. Bobblehead Scanner flags a scan as a stadium giveaway so you know which category you are in.</p>
+      </details>
+      <details>
+        <summary>Is Bobblehead Scanner free?</summary>
+        <p class="a">Your first 5 scans are free, with no account and no sign-up. Bobblehead Scanner Pro unlocks unlimited scans, unlimited collection storage, collection value tracking, and automatic cloud backup for $4.99 per month or $39.99 per year.</p>
+      </details>
+      <details>
+        <summary>Does it work on vintage bobbleheads and nodders?</summary>
+        <p class="a">Yes. Vintage papier-mâché nodders, modern stadium giveaways, mascots and limited editions all scan the same way. Older and rarer pieces are harder to identify confidently, so photograph the base and any nameplate text clearly for the best result.</p>
+      </details>
+      <details>
+        <summary>Is my collection private?</summary>
+        <p class="a">There is no account and no sign-up. Your collection and its photos live on your device. Scan photos are sent over an encrypted connection only to identify the item and are never stored on our servers. Pro subscribers get an encrypted cloud backup of their collection details, which never includes photos. Read the full <a href="privacy.html">privacy policy</a>.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="cta-row">
+      <a class="btn-primary" href="https://apps.apple.com/app/apple-store/id6777501965?ct=web_footer&amp;mt=8">Download Bobblehead Scanner</a>
+    </div>
+    <div class="foot-links">
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms of Use</a>
+    </div>
+    <p class="copyright">© 2026 Bobblehead Scanner</p>
+  </div>
+</footer>
+
+<script>
+  // ── "Is it worth checking?" scorecard — entirely client side ──────────────
+  // Weights are a rule of thumb drawn from what actually moves bobblehead
+  // prices: age first, then packaging, condition, subject, and print run.
+  var form = document.getElementById("scoreForm");
+  var result = document.getElementById("result");
+  var MAX = 110; // 35 + 20 + 20 + 20 + 15
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    var ids = ["era", "box", "condition", "who", "rarity"];
+    var score = 0;
+    for (var i = 0; i < ids.length; i++) {
+      score += parseInt(document.getElementById(ids[i]).value, 10) || 0;
+    }
+    var pct = Math.round((score / MAX) * 100);
+
+    var boxed = document.getElementById("box").value === "20";
+    var vintage = parseInt(document.getElementById("era").value, 10) >= 16;
+    var damaged = document.getElementById("condition").value === "0";
+
+    var tier, cls, detail;
+    if (score >= 68) {
+      tier = "Worth Appraising";
+      cls = "high";
+      detail = "This ticks the boxes that actually carry a bobblehead: <strong>" +
+        (vintage ? "real age, " : "") + (boxed ? "original packaging, " : "") +
+        "and a subject collectors search for</strong>. Pieces in this range are the ones worth pricing properly before they go in a garage-sale box.";
+    } else if (score >= 42) {
+      tier = "Worth a Look";
+      cls = "mid";
+      detail = "Middle of the pack. Items like this usually land in the <strong>$15 to $60 range</strong>, but the spread is wide and depends almost entirely on who is on the base. " +
+        (boxed ? "Keeping the box is doing real work for you here." : "Finding the original box would move this up a tier.");
+    } else {
+      tier = "Likely Common";
+      cls = "low";
+      detail = "Most modern giveaway bobbleheads live here, because teams hand out tens of thousands in a night. " +
+        (damaged ? "Visible damage is the biggest drag on the score. " : "") +
+        "That does not make it worthless, just <strong>common enough that the exact player decides the price</strong>.";
+    }
+
+    result.innerHTML =
+      '<div class="result-card">' +
+        '<div class="r-label">Value potential</div>' +
+        '<div class="r-tier ' + cls + '">' + tier + '</div>' +
+        '<div class="meter"><span class="' + cls + '" style="width:' + pct + '%"></span></div>' +
+        '<p class="r-detail">' + detail + '</p>' +
+      '</div>';
+  });
+</script>
+
 </body>
 </html>
